@@ -47,20 +47,20 @@ public class DaoUser {
 			return null;
 		}
 	}
-	
+
 	// 아이디 중복 체크
-		public boolean confirmUserId(String id) {
-			sb.setLength(0);
-			sql = sb.append("SELECT idx FROM User WHERE id=?").toString();
-			try {
-				pstmt = con.prepareStatement(sql);
-				pstmt.setString(1, id);
-				rs = pstmt.executeQuery();
-				return rs.next();
-			} catch (SQLException e1) {
-				return true;
-			}
+	public boolean confirmUserId(String id) {
+		sb.setLength(0);
+		sql = sb.append("SELECT idx FROM User WHERE id=?").toString();
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			return rs.next();
+		} catch (SQLException e1) {
+			return true;
 		}
+	}
 
 	// 로그인
 	public boolean doSignIn(String id, String pwd) {
@@ -101,7 +101,7 @@ public class DaoUser {
 			return null;
 		}
 	}
-	
+
 	// 비밀번호 확인
 	public ModelUser confirmPwd(String id, String pwd) {
 		sb.setLength(0);
@@ -121,48 +121,39 @@ public class DaoUser {
 		}
 	}
 
-	// 비밀번호 변경
-	public void updateUserPwd(String id, String pwd) {
-		sb.setLength(0);
-		sql = sb.append("UPDATE User SET pwd=? WHERE id=?").toString();
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, pwd);
-			pstmt.setString(2, id);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	// 연락처 변경
-	public void updateUserPhone(String id, String phone) {
-		sb.setLength(0);
-		sql = sb.append("UPDATE User SET phone=? WHERE id=?").toString();
-		try {
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, phone);
-			pstmt.setString(2, id);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	// 이름 변경
-		public void updateUserName(String id, String name) {
-			sb.setLength(0);
+	// 내정보 변경
+	public int updateMyInfo(String field, String id, String updateInfo) {
+		sb.setLength(0);// StringBuilder 버퍼 초기화
+		switch(field) {
+		case "pwd":		// 비밀번호변경
+			sql = sb.append("UPDATE User SET pwd=? WHERE id=?").toString();
+			break;
+		case "name":	// 이름변경
 			sql = sb.append("UPDATE User SET name=? WHERE id=?").toString();
-			try {
-				pstmt = con.prepareStatement(sql);
-				pstmt.setString(1, name);
-				pstmt.setString(2, id);
-				pstmt.executeUpdate();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			break;
+		case "birth":	// 생년월일변경
+			sql = sb.append("UPDATE User SET birth=? WHERE id=?").toString();
+			break;
+		case "gender":	// 성별변경
+			sql = sb.append("UPDATE User SET gender=? WHERE id=?").toString();
+			break;
+		case "phone":	// 연락처변경
+			sql = sb.append("UPDATE User SET phone=? WHERE id=?").toString();
+			break;
+		case "email":	// 이메일변경
+			sql = sb.append("UPDATE User SET email=? WHERE id=?").toString();
+			break;
 		}
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, updateInfo);
+			pstmt.setString(2, id);
+			return pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("잘못된 내정보 변경 시도입니다.");
+			return 0;
+		}
+	}
 
 	// 프로그램 종료
 	public void closeProgram() {
@@ -178,5 +169,4 @@ public class DaoUser {
 			System.out.println("db 연결종료 중 오류");
 		}
 	}
-
 }

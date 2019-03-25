@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-import kwany.bmm.common.PatternUserSign;
+import kwany.bmm.common.ValidateUserSign;
 import kwany.bmm.dao.DaoUser;
 import kwany.bmm.model.ModelUser;
 
-public class ViewSignUp extends PatternUserSign {
+public class ViewSignUp extends ValidateUserSign {
 	private DaoUser daoUser;
 	private ModelUser modelUser;
 	private Scanner scan;
@@ -149,7 +149,7 @@ public class ViewSignUp extends PatternUserSign {
 					flagCase = 7;
 					continue;
 				} else {
-					System.out.println("\t\t\t'남자' or '여자'만 입력해주세요.");
+					System.out.println("\t\t\t'남자' or '여자'만 입력하세요.");
 					flagCase = 6;
 					continue;
 				}
@@ -164,7 +164,7 @@ public class ViewSignUp extends PatternUserSign {
 					flagCase = 8;
 					continue;
 				} else {
-					System.out.println("\t\t\t연락처는 11자리 숫자로만 입력가능합니다.");
+					System.out.println("\t\t\t'01012345678'형식으로 입력하세요.");
 					flagCase = 7;
 					continue;
 				}

@@ -1,13 +1,12 @@
 package kwany.bmm.view.user;
 
 import java.util.Scanner;
-import java.util.regex.Matcher;
 
-import kwany.bmm.common.PatternUserSign;
+import kwany.bmm.common.ValidateUserSign;
 import kwany.bmm.dao.DaoUser;
 import kwany.bmm.model.ModelUser;
 
-public class ViewMyPage extends PatternUserSign{
+public class ViewMyPage extends ValidateUserSign{
 	public static String USER_ID;
 	private DaoUser daoUser;
 	private ModelUser modelUser;
@@ -137,23 +136,24 @@ public class ViewMyPage extends PatternUserSign{
 			System.out.println("\t변경할 비밀번호를 입력하세요.");
 			System.out.println("─────────────────────────────────────────");
 			System.out.print("\t 비밀번호 : ");
-			String pwd = scan.next();
+			pwd = scan.next();
 			System.out.print("\t 비밀번호 확인 : ");
-			String confirmPwd = scan.next();
-			Matcher pwd_matcher = patternPwd.matcher(pwd);
-			Matcher confirmPwd_matcher = patternPwd.matcher(confirmPwd);
-			if (pwd_matcher.find() && confirmPwd_matcher.find() && pwd.equals(confirmPwd)) {
-				daoUser.updateUserPwd(USER_ID, pwd);
-				modelUser.setPwd(pwd);
-				flagUpdate = false;
-				System.out.println("\t비밀번호 변경 완료");
-				break;
+			confirmPwd = scan.next();
+			if (validate(FIELD_PWD, pwd) && pwd.equals(confirmPwd)) {
+				if(daoUser.updateMyInfo(FIELD_PWD, USER_ID, pwd) != 0) {
+					modelUser.setPwd(pwd);
+					flagUpdate = false;
+					System.out.println("\t비밀번호 변경 완료");
+					break;
+				}else {
+					System.out.println("잘못된 비밀번호 변경 시도입니다.");
+					continue;
+				}
 			} else {
 				System.out.println("비밀번호가 일치하지 않거나 5~20글자로 입력하지 않았습니다.");
 				continue;
 			}
 		}
-
 	}
 
 	// 이름 변경 화면
@@ -164,14 +164,17 @@ public class ViewMyPage extends PatternUserSign{
 			System.out.println("\t변경할 이름을 입력하세요.");
 			System.out.println("─────────────────────────────────────────");
 			System.out.print("\t 이름 : ");
-			String name = scan.next();
-			Matcher name_matcher = patternName.matcher(name);
-			if (name_matcher.find()) {
-				daoUser.updateUserName(USER_ID, name);
-				modelUser.setName(name);
-				flagUpdate = false;
-				System.out.println("\t이름 변경 완료");
-				break;
+			name = scan.next();
+			if (validate(FIELD_NAME, name)) {
+				if(daoUser.updateMyInfo(FIELD_NAME, USER_ID, name) != 0) {
+					modelUser.setName(name);
+					flagUpdate = false;
+					System.out.println("\t이름 변경 완료");
+					break;
+				}else {
+					System.out.println("잘못된 이름변경 시도입니다.");
+					continue;
+				}
 			} else {
 				System.out.println("정확한 이름을 입력하세요.");
 				continue;
@@ -181,14 +184,53 @@ public class ViewMyPage extends PatternUserSign{
 
 	// 생년월일 변경 화면
 	private void updateBirth() {
-		// TODO Auto-generated method stub
-
+		flagUpdate = true;
+		while (flagUpdate) {
+			System.out.println("─────────────────────────────────────────");
+			System.out.println("\t변경할 생년월일을 입력하세요.");
+			System.out.println("─────────────────────────────────────────");
+			System.out.print("\t 생년월일 : ");
+			birth = scan.next();
+			if (validate(FIELD_BIRTH, birth)) {
+				if(daoUser.updateMyInfo(FIELD_BIRTH, USER_ID, birth) != 0) {
+					modelUser.setBirth(birth);
+					flagUpdate = false;
+					System.out.println("\t생년월일 변경 완료");
+					break;
+				} else {
+					System.out.println("잘못된 생년월일 변경 시도입니다.");
+					continue;
+				}
+			} else {
+				System.out.println("정확한 생년월일을 입력하세요.");
+				continue;
+			}
+		}
 	}
 
-// 성별 변경 화면
+	// 성별 변경 화면
 	private void updateGender() {
-		// TODO Auto-generated method stub
-
+		flagUpdate = true;
+		while (flagUpdate) {
+			System.out.println("─────────────────────────────────────────");
+			System.out.println("\t변경할 성별 입력하세요.");
+			System.out.println("─────────────────────────────────────────");
+			System.out.print("\t성별 : ");
+			gender = scan.next();
+			if (gender.equals("남자") || gender.equals("여자")) {
+				if(daoUser.updateMyInfo(FIELD_GENDER, USER_ID, gender) != 0) {
+					modelUser.setGender(gender.substring(0, 2));	
+					flagUpdate = false;
+					System.out.println("\t성별 변경 완료");
+					break;
+				}else {
+					System.out.println("잘못된 성별 변경 시도입니다.");
+				}
+			} else {
+				System.out.println("'남자' or '여자'만 입력하세요.");
+				continue;
+			}
+		}
 	}
 
 	// 연락처 변경 화면
@@ -199,16 +241,18 @@ public class ViewMyPage extends PatternUserSign{
 			System.out.println("\t변경할 연락처를 입력하세요.");
 			System.out.println("─────────────────────────────────────────");
 			System.out.print("\t연  락 처 : ");
-			String phone = scan.next();
-			Matcher phone_matcher = patternPhone.matcher(phone);
-			if (phone_matcher.find()) {
-				daoUser.updateUserPhone(USER_ID, phone);
-				modelUser.setPhone(phone);
-				flagUpdate = false;
-				System.out.println("\t연락처 변경 완료");
-				break;
+			phone = scan.next();
+			if (validate(FIELD_PHONE, phone)) {
+				if(daoUser.updateMyInfo(FIELD_PHONE, USER_ID, phone) != 0) {
+					modelUser.setPhone(phone);
+					flagUpdate = false;
+					System.out.println("\t연락처 변경 완료");
+					break;
+				}else {
+					System.out.println("잘못된 연락처 변경 시도입니다.");
+				}
 			} else {
-				System.out.println("연락처 11자리를 정확히 입력하세요.");
+				System.out.println("'01012345678'형식으로 입력하세요.");
 				continue;
 			}
 		}
@@ -216,7 +260,27 @@ public class ViewMyPage extends PatternUserSign{
 
 	// 이메일 변경 화면
 	private void updateEmail() {
-		// TODO Auto-generated method stub
+		flagUpdate = true;
+		while (flagUpdate) {
+			System.out.println("─────────────────────────────────────────");
+			System.out.println("\t변경할 이메일을 입력하세요.");
+			System.out.println("─────────────────────────────────────────");
+			System.out.print("\t이메일 : ");
+			email = scan.next();
+			if (validate(FIELD_EMAIL, email)) {
+				if(daoUser.updateMyInfo(FIELD_EMAIL, USER_ID, email) != 0) {
+					modelUser.setEmail(email);
+					flagUpdate = false;
+					System.out.println("\t이메일 변경 완료");
+					break;
+				}else {
+					System.out.println("잘못된 이메일 변경 시도 입니다.");
+				}
+			} else {
+				System.out.println("정확한 이메일을 입력하세요.");
+				continue;
+			}
+		}
 
 	}
 	
