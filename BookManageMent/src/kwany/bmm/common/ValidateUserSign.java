@@ -1,5 +1,8 @@
 package kwany.bmm.common;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +34,8 @@ public class ValidateUserSign {
 	protected Matcher matcherBirth;
 	protected Matcher matcherPhone;
 	protected Matcher matcherEmail;
+	protected Date birthDate;
+	protected Date minDate;
 
 	public ValidateUserSign() {
 		// 공백이 아닌 문자가 5~20개가 있는지 확인
@@ -43,7 +48,12 @@ public class ValidateUserSign {
 		// 01(016789중하나)(숫자 3~4자)(숫자4자) = 01012345678 or 0101234567
 		patternPhone = Pattern.compile("^(01([016789]))([\\d]{3,4})([\\d]{4})$");
 		// (문자)(문자_-)(문자)@(문자)(문자_-)(문자)(.문자)
-		patternEmail = Pattern.compile("^[\\w][\\w\\_\\-\\.\\+]+[\\w]@[\\w][\\w\\_\\-]*[\\w](\\.[a-zA-Z]{2,6}){1,2}$");
+		patternEmail = Pattern.compile("^[\\w][\\w\\_\\-\\.\\+]+[\\w]@[\\w][\\w\\_\\-]*[\\w](\\.[a-zA-Z]{2,6}){1,2}$");	
+		try {
+			minDate = new SimpleDateFormat("yyyy-DD-mm").parse("1900-01-01");
+		} catch (ParseException e) {
+			System.out.println("생년월일 유효성 세팅중 오류");
+		}
 	}
 	
 	public boolean validate(String field, String value) {
@@ -58,6 +68,11 @@ public class ValidateUserSign {
 			matcherName = patternName.matcher(value);
 			return matcherName.find();
 		case FIELD_BIRTH:
+			try {
+				birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(birth);
+			} catch (ParseException e) {
+				return false;
+			}
 			matcherBirth = patternBirth.matcher(value);
 			return matcherBirth.find();
 		case FIELD_PHONE:

@@ -1,10 +1,7 @@
 package kwany.bmm.view;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.regex.Matcher;
 
 import kwany.bmm.common.ValidateUserSign;
 import kwany.bmm.dao.DaoUser;
@@ -17,19 +14,11 @@ public class ViewSignUp extends ValidateUserSign {
 	private boolean flagSignUp;
 	private boolean flagConfirm;
 	private int flagCase;
-	private Date birthDate;
-	private Date minDate;
 
 	public ViewSignUp() {
 		daoUser = new DaoUser();
 		modelUser = new ModelUser();
 		scan = new Scanner(System.in);
-		try {
-			minDate = new SimpleDateFormat("yyyy-DD-mm").parse("1900-01-01");
-		} catch (ParseException e) {
-			System.out.println("생성자에선안됨ㅋㅋ");
-		}
-
 	}
 
 	// 회원가입 화면
@@ -43,9 +32,8 @@ public class ViewSignUp extends ValidateUserSign {
 			switch (flagCase) {
 			case 1:
 				System.out.print("\t아  이 디 : ");
-				String id = scan.next();
-				Matcher id_matcher = patternId.matcher(id);
-				if (id_matcher.find()) {
+				id = scan.next();
+				if (validate(FIELD_ID, id)) {
 					if (!daoUser.confirmUserId(id)) {
 						System.out.println("\t\t\t사용가능 아이디입니다.");
 						modelUser.setId(id);
@@ -64,9 +52,8 @@ public class ViewSignUp extends ValidateUserSign {
 
 			case 2:
 				System.out.print("\t비밀번호 : ");
-				String pwd = scan.next();
-				Matcher pwd_matcher = patternPwd.matcher(pwd);
-				if (pwd_matcher.find()) {
+				pwd = scan.next();
+				if (validate(FIELD_PWD, pwd)) {
 					System.out.println("\t\t\t사용가능한 비밀번호입니다.");
 					modelUser.setPwd(pwd);
 					flagCase = 3;
@@ -79,9 +66,8 @@ public class ViewSignUp extends ValidateUserSign {
 
 			case 3:
 				System.out.print("　　확인용 비밀번호 : ");
-				String confirmPwd = scan.next();
-				Matcher confirmPwd_matcher = patternPwd.matcher(confirmPwd);
-				if (confirmPwd_matcher.find() && confirmPwd.equals(modelUser.getPwd())) {
+				confirmPwd = scan.next();
+				if (confirmPwd.equals(modelUser.getPwd())) {
 					System.out.println("\t\t\t비밀번호 일치 확인되었습니다.");
 					flagCase = 4;
 					continue;
@@ -93,9 +79,8 @@ public class ViewSignUp extends ValidateUserSign {
 
 			case 4:
 				System.out.print("\t이　　름 : ");
-				String name = scan.next();
-				Matcher name_matcher = patternName.matcher(name);
-				if (name_matcher.find()) {
+				name = scan.next();
+				if (validate(FIELD_NAME, name)) {
 					System.out.println("\t\t\t'"+name+"'입력되었습니다.");
 					modelUser.setName(name);
 					flagCase = 5;
@@ -108,16 +93,8 @@ public class ViewSignUp extends ValidateUserSign {
 
 			case 5:
 				System.out.print("\t생년월일 : ");
-				String birth = scan.next();
-				Matcher birth_matcher = patternBirth.matcher(birth);
-				try {
-					birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(birth);
-				} catch (ParseException e) {
-					System.out.println("\t\t\t정확한 생년월일을 입력하세요.");
-					flagCase = 5;
-					continue;
-				}
-				if (birth_matcher.find()) {
+				birth = scan.next();
+				if (validate(FIELD_BIRTH, birth)) {
 					if (birthDate.getTime() - new Date().getTime() > 0) {
 						System.out.println("\t\t\t정확한 생년월일을 입력하세요.");
 						flagCase = 5;
@@ -142,7 +119,7 @@ public class ViewSignUp extends ValidateUserSign {
 
 			case 6:
 				System.out.print("\t성　　별 : ");
-				String gender = scan.next();
+				gender = scan.next();
 				if (gender.equals("남자") || gender.equals("여자")) {
 					System.out.println("\t\t\t'"+gender+"'선택 되었습니다.");
 					modelUser.setGender(gender);
@@ -156,9 +133,8 @@ public class ViewSignUp extends ValidateUserSign {
 
 			case 7:
 				System.out.print("\t연  락 처 : ");
-				String phone = scan.next();
-				Matcher phone_matcher = patternPhone.matcher(phone);
-				if (phone_matcher.find()) {
+				phone = scan.next();
+				if (validate(FIELD_PHONE, phone)) {
 					System.out.println("\t\t\t'"+phone+"'입력되었습니다.");
 					modelUser.setPhone(phone);
 					flagCase = 8;
@@ -171,9 +147,8 @@ public class ViewSignUp extends ValidateUserSign {
 
 			case 8:
 				System.out.print("\t이  메 일 : ");
-				String email = scan.next();
-				Matcher email_matcher = patternEmail.matcher(email);
-				if (email_matcher.find()) {
+				email = scan.next();
+				if (validate(FIELD_EMAIL, email)) {
 					System.out.println("\t\t\t사용가능한 email 입니다.");
 					modelUser.setEmail(email);
 					confirmSignUp();
