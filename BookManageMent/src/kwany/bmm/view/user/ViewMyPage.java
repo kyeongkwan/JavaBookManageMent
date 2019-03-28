@@ -63,7 +63,7 @@ public class ViewMyPage extends ValidateUserSign{
 	// 정보변경 비밀번호 확인 화면
 	public void viewConfirmPwd() {
 		flagConfirm = true;
-		String pwd = null;
+		pwd = null;
 		while (flagConfirm) {
 			System.out.println("─────────────────────────────────────────");
 			System.out.println("'" + USER_ID + "'님의 정보변경을 위한 비밀번호 확인");

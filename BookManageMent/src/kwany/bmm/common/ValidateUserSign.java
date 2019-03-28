@@ -43,7 +43,7 @@ public class ValidateUserSign {
 		patternPwd = Pattern.compile("^[\\S]{5,20}$");
 		// 숫자가 아닌 문자가 2~10개가 있는지 확인
 		patternName = Pattern.compile("^(\\D){2,10}$");
-		// (19xx또는20xx)-(0x또는1x)-(0x또는1x또는2x또는3x) = yyyy-MM-dd
+		// (19xx또는20xx)-(0x또는1x)-(0x또는1x또는2x또는3x) = 19yy-MM-dd or 20yy-MM-dd
 		patternBirth = Pattern.compile("^(19[\\d]{2}|20[\\d]{2})-(0[1-9]|1[0-2])-(0[1-9]|1[\\d]|2[\\d]|3[0-1])$");
 		// 01(016789중하나)(숫자 3~4자)(숫자4자) = 01012345678 or 0101234567
 		patternPhone = Pattern.compile("^(01([016789]))([\\d]{3,4})([\\d]{4})$");
@@ -69,7 +69,7 @@ public class ValidateUserSign {
 			return matcherName.find();
 		case FIELD_BIRTH:
 			try {
-				birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(birth);
+				birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(value);
 			} catch (ParseException e) {
 				return false;
 			}

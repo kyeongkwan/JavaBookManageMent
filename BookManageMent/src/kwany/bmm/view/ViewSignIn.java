@@ -3,11 +3,13 @@ package kwany.bmm.view;
 import java.util.Scanner;
 
 import kwany.bmm.dao.DaoUser;
+import kwany.bmm.view.admin.ViewHomeAdmin;
 import kwany.bmm.view.user.ViewHomeUser;
 
 public class ViewSignIn {
 	private DaoUser daoUser;
 	private ViewHomeUser viewHomeUser;
+	private ViewHomeAdmin viewHomeAdmin;
 	private Scanner scan;
 	private boolean flagSignIn;
 	private boolean flagRetry;
@@ -28,13 +30,18 @@ public class ViewSignIn {
 			String id = scan.next();
 			System.out.print("\t비밀번호: ");
 			String pwd = scan.next();
-			if (daoUser.doSignIn(id, pwd)) {
+			if (daoUser.doSignIn(id, pwd).getCode().equals("회원")) {
 				flagSignIn = false;
 				viewHomeUser = new ViewHomeUser(id);
 				viewHomeUser.viewHomeUser();
 				break;
+			} else if(daoUser.doSignIn(id, pwd).getCode().equals("관리자")) {
+				flagSignIn = false;
+				viewHomeAdmin = new ViewHomeAdmin();
+				viewHomeAdmin.viewHomeAdmin();
 			} else {
 				retrySignIn();
+				continue;
 			}
 		}
 	}

@@ -35,7 +35,7 @@ public class ViewSignUp extends ValidateUserSign {
 				id = scan.next();
 				if (validate(FIELD_ID, id)) {
 					if (!daoUser.confirmUserId(id)) {
-						System.out.println("\t\t\t사용가능 아이디입니다.");
+						System.out.println("\t\t\t✅");
 						modelUser.setId(id);
 						flagCase = 2;
 						continue;
@@ -54,7 +54,7 @@ public class ViewSignUp extends ValidateUserSign {
 				System.out.print("\t비밀번호 : ");
 				pwd = scan.next();
 				if (validate(FIELD_PWD, pwd)) {
-					System.out.println("\t\t\t사용가능한 비밀번호입니다.");
+					System.out.println("\t\t\t✅");
 					modelUser.setPwd(pwd);
 					flagCase = 3;
 					continue;
@@ -68,7 +68,7 @@ public class ViewSignUp extends ValidateUserSign {
 				System.out.print("　　확인용 비밀번호 : ");
 				confirmPwd = scan.next();
 				if (confirmPwd.equals(modelUser.getPwd())) {
-					System.out.println("\t\t\t비밀번호 일치 확인되었습니다.");
+					System.out.println("\t\t\t✅");
 					flagCase = 4;
 					continue;
 				} else {
@@ -81,7 +81,7 @@ public class ViewSignUp extends ValidateUserSign {
 				System.out.print("\t이　　름 : ");
 				name = scan.next();
 				if (validate(FIELD_NAME, name)) {
-					System.out.println("\t\t\t'"+name+"'입력되었습니다.");
+					System.out.println("\t\t\t✅");
 					modelUser.setName(name);
 					flagCase = 5;
 					continue;
@@ -99,29 +99,27 @@ public class ViewSignUp extends ValidateUserSign {
 						System.out.println("\t\t\t정확한 생년월일을 입력하세요.");
 						flagCase = 5;
 						continue;
+					} else if (minDate.getTime() - birthDate.getTime() > 0) {
+						System.out.println("\t\t\t정확한 생년월일을 입력하세요.");
+						flagCase = 5;
+						continue;
 					} else {
-						System.out.println("\t\t\t'"+birth+"'입력되었습니다.");
+						System.out.println("\t\t\t✅");
 						modelUser.setBirth(birth);
 						flagCase = 6;
 						continue;
 					}
 				} else {
-					if (minDate.getTime() - birthDate.getTime() > 0) {
-						System.out.println("\t\t\t정확한 생년월일을 입력하세요.");
-						flagCase = 5;
-						continue;
-					} else {
-						System.out.println("\t\t\t정확한 생년월일을 입력하세요.");
-						flagCase = 5;
-						continue;
-					}
+					System.out.println("\t\t\t정확한 생년월일을 입력하세요.");
+					flagCase = 5;
+					continue;
 				}
 
 			case 6:
 				System.out.print("\t성　　별 : ");
 				gender = scan.next();
 				if (gender.equals("남자") || gender.equals("여자")) {
-					System.out.println("\t\t\t'"+gender+"'선택 되었습니다.");
+					System.out.println("\t\t\t✅");
 					modelUser.setGender(gender);
 					flagCase = 7;
 					continue;
@@ -135,7 +133,7 @@ public class ViewSignUp extends ValidateUserSign {
 				System.out.print("\t연  락 처 : ");
 				phone = scan.next();
 				if (validate(FIELD_PHONE, phone)) {
-					System.out.println("\t\t\t'"+phone+"'입력되었습니다.");
+					System.out.println("\t\t\t✅");
 					modelUser.setPhone(phone);
 					flagCase = 8;
 					continue;
@@ -149,7 +147,7 @@ public class ViewSignUp extends ValidateUserSign {
 				System.out.print("\t이  메 일 : ");
 				email = scan.next();
 				if (validate(FIELD_EMAIL, email)) {
-					System.out.println("\t\t\t사용가능한 email 입니다.");
+					System.out.println("\t\t\t✅");
 					modelUser.setEmail(email);
 					confirmSignUp();
 					break;
@@ -203,12 +201,11 @@ public class ViewSignUp extends ValidateUserSign {
 	}
 
 	// 회원가입 결과화면
-	private void resultSignUp(ModelUser setUser) {
-		if (setUser == null) {
+	private void resultSignUp(ModelUser modelUser) {
+		if (modelUser == null) {
 			System.out.println("회원가입을 중단했습니다.");
 		} else {
 			System.out.println("회원가입을 완료했습니다.");
 		}
-
 	}
 }

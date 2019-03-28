@@ -44,6 +44,7 @@ public class DaoUser {
 			pstmt.executeUpdate();
 			return modelUser;
 		} catch (Exception e) {
+			System.out.println("회원가입중 오류 발생.");
 			return null;
 		}
 	}
@@ -63,17 +64,20 @@ public class DaoUser {
 	}
 
 	// 로그인
-	public boolean doSignIn(String id, String pwd) {
+	public ModelUser doSignIn(String id, String pwd) {
 		sb.setLength(0);
-		sql = sb.append("SELECT id FROM User WHERE id=? AND pwd=?;").toString();
+		sql = sb.append("SELECT id, code FROM User WHERE id=? AND pwd=?;").toString();
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, id);
 			pstmt.setString(2, pwd);
 			rs = pstmt.executeQuery();
-			return rs.next();
+			rs.next();
+			modelUser.setId(id);
+			modelUser.setCode(rs.getString("code"));
+			return modelUser;
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
 	}
 
